@@ -23,23 +23,23 @@
         h1 {
             text-align: center;
             color: white;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         #scoreboard {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .score {
             background: rgba(255,255,255,0.4);
-            padding: 6px 15px;
-            border-radius: 15px;
-            font-size: 1rem;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: 900;
             border: 2px solid white;
             color: white;
@@ -49,17 +49,17 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 5px;
-            padding: 10px;
+            gap: 4px;
+            padding: 8px;
             background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            max-width: 400px;
+            border-radius: 10px;
+            max-width: 360px;
             margin: 0 auto;
         }
 
         .hex {
-            width: 50px;
-            height: 58px;
+            width: 45px;
+            height: 52px;
             position: relative;
             display: flex;
             align-items: center;
@@ -77,13 +77,13 @@
             fill: white;
             stroke: #94a3b8;
             stroke-width: 2;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
         }
 
         .hex span {
             position: relative;
             z-index: 2;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 900;
             color: #1e293b;
         }
@@ -104,7 +104,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -115,32 +115,32 @@
 
         #qbox {
             background: white;
-            padding: 20px;
-            border-radius: 18px;
-            max-width: 380px;
+            padding: 18px;
+            border-radius: 15px;
+            max-width: 350px;
             width: 100%;
             text-align: center;
         }
 
         #qletter {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
             color: #22c55e;
         }
 
         #qcat {
             background: #f1f5f9;
-            padding: 3px 10px;
-            border-radius: 8px;
+            padding: 2px 8px;
+            border-radius: 6px;
             color: #64748b;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
         #timer {
             height: 4px;
             background: #e2e8f0;
             border-radius: 2px;
-            margin: 10px 0;
+            margin: 8px 0;
             overflow: hidden;
         }
 
@@ -151,25 +151,25 @@
         }
 
         #qtext {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #1e293b;
-            margin: 12px 0;
+            margin: 10px 0;
             font-weight: 700;
         }
 
         #qopts {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-top: 12px;
+            gap: 5px;
+            margin-top: 10px;
         }
 
         #qopts button {
-            padding: 10px 6px;
-            font-size: 0.9rem;
+            padding: 8px 4px;
+            font-size: 0.8rem;
             font-weight: 700;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 6px;
             background: white;
             cursor: pointer;
             font-family: Cairo;
@@ -178,36 +178,15 @@
         #qopts button.correct { background: #22c55e; color: white; border-color: #22c55e; }
         #qopts button.wrong { background: #ef4444; color: white; border-color: #ef4444; }
 
-        /* Team buttons */
-        #team-btns {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            justify-content: center;
-        }
-
-        #team-btns button {
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: 900;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: Cairo;
-        }
-
-        .btn-green { background: #22c55e; color: white; }
-        .btn-orange { background: #f97316; color: white; }
-
         #result {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 20px 40px;
-            border-radius: 15px;
-            font-size: 1.5rem;
+            padding: 18px 35px;
+            border-radius: 12px;
+            font-size: 1.3rem;
             font-weight: 900;
             z-index: 200;
             animation: pop 0.3s ease;
@@ -225,19 +204,19 @@
         #info {
             text-align: center;
             color: white;
-            font-size: 0.85rem;
-            margin-top: 8px;
+            font-size: 0.8rem;
+            margin-top: 5px;
             opacity: 0.9;
         }
 
         /* iPad */
         @media (min-width: 768px) {
-            .hex { width: 65px; height: 75px; }
-            .hex span { font-size: 1.8rem; }
-            #board { gap: 8px; max-width: 500px; }
-            #qletter { font-size: 5rem; }
-            #qtext { font-size: 1.3rem; }
-            #qopts button { padding: 14px; font-size: 1rem; }
+            .hex { width: 60px; height: 70px; }
+            .hex span { font-size: 1.6rem; }
+            #board { gap: 6px; max-width: 480px; }
+            #qletter { font-size: 4.5rem; }
+            #qtext { font-size: 1.2rem; }
+            #qopts button { padding: 12px; font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -258,22 +237,18 @@
             <div id="timer"><div id="timerfill"></div></div>
             <div id="qtext">السؤال...</div>
             <div id="qopts"></div>
-            <div id="team-btns">
-                <button class="btn-green" onclick="setWinner('green')">🟢 الأخضر</button>
-                <button class="btn-orange" onclick="setWinner('orange')">🟠 البرتقالي</button>
-            </div>
         </div>
     </div>
 
     <div id="result"></div>
 
-    <div id="info">اضغط على حرف ثم اختار اللي جاوب صح!</div>
+    <div id="info">اضغط على حرف ثم أجيب صح تأخذه!</div>
 
     <script>
     const letters = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
     
     const qz = {
-        'أ':[{c:'طب',q:'أكبر عضو؟',o:['الجلد','الكبد','الرئة','القلب'],a:0},{c:'عام',q:'عاصمة السعودية؟',o:['الرياض','جدة','مكة','الدمام'],a:0}],
+        'أ':[{c:'طب',q:'أكبر عضو؟',o:['الجلد','الكبد','الرئة','القلب'],a:0},{c:'عام',q:'عاصمة السعودية؟',o:['الرياضمكة','الدمام'],a','جدة',':0}],
         'ب':[{c:'طب',q:'السكري يصيب؟',o:['البنكرياس','القلب','الكلى','الكبد'],a:0},{c:'علم',q:'أخف عنصر؟',o:['هيدروجين','هيليوم','ليثيوم'],a:0}],
         'ت':[{c:'طب',q:'قياس الضغط؟',o:['مقياس الضغط','ميزان','سماعة'],a:0},{c:'دين',q:'الصلوات؟',o:['5','3','4'],a:0}],
         'ث':[{c:'طب',q:'ثالث أكبر عضو؟',o:['الكبد','القلب','المخ','الرئة'],a:0}],
@@ -339,13 +314,16 @@
         const opts = document.getElementById('qopts');
         opts.innerHTML = '';
         
-        const optsWithIdx = curQ.o.map((o, i) => ({o, i}));
-        optsWithIdx.sort(() => Math.random() - 0.5);
+        // Shuffle options
+        const optLabels = [...curQ.o];
+        optLabels.sort(() => Math.random() - 0.5);
         
-        optsWithIdx.forEach(item => {
+        optLabels.forEach(label => {
             const btn = document.createElement('button');
-            btn.innerText = item.o;
-            btn.onclick = () => ans(item.i);
+            btn.innerText = label;
+            // Find original index
+            const origIdx = curQ.o.indexOf(label);
+            btn.onclick = () => checkAnswer(origIdx);
             opts.appendChild(btn);
         });
         
@@ -361,37 +339,54 @@
         }, 1000);
     }
 
-    function ans(i) {
+    function checkAnswer(idx) {
         clearInterval(tm);
         
         const btns = document.querySelectorAll('#qopts button');
-        let correctBtn = null;
-        btns.forEach((btn, idx) => {
-            if (curQ.o[curQ.a] === btn.innerText) correctBtn = btn;
+        
+        // Find and mark correct
+        let correctLabel = curQ.o[curQ.a];
+        btns.forEach(btn => {
+            if (btn.innerText === correctLabel) btn.classList.add('correct');
+            if (btn.innerText !== correctLabel && btn.classList.contains('wrong')) btn.classList.remove('wrong');
         });
         
-        if (correctBtn) correctBtn.classList.add('correct');
-        
-        if (i !== curQ.a) {
-            btns[i].classList.add('wrong');
+        if (idx === curQ.a) {
+            // Correct! Give to random team (in real game, they'd buzz in)
+            const winner = Math.random() < 0.5 ? 'green' : 'orange';
+            setTimeout(() => {
+                document.getElementById('qmodal').classList.remove('show');
+                take(curCell, winner);
+                showRes(winner, true);
+            }, 600);
+        } else {
+            // Wrong - mark it
+            btns.forEach((btn, i) => {
+                if (curQ.o[i] === curQ.o[idx]) btn.classList.add('wrong');
+            });
+            // Give to other team
+            const loser = idx === curQ.a ? 'green' : 'orange';
+            setTimeout(() => {
+                document.getElementById('qmodal').classList.remove('show');
+                take(curCell, loser);
+                showRes(loser, false);
+            }, 600);
         }
     }
 
-    function setWinner(team) {
-        document.getElementById('qmodal').classList.remove('show');
-        take(curCell, team);
-        showRes(team, true);
-    }
-
     function timeout() {
+        // Time out - give to random team
+        const winner = Math.random() < 0.5 ? 'green' : 'orange';
         document.getElementById('qmodal').classList.remove('show');
+        take(curCell, winner);
+        showRes(winner, false);
     }
 
     function showRes(t, correct) {
         const r = document.getElementById('result');
         r.className = 'show ' + t;
-        r.innerText = t === 'green' ? '🟢 الأخضر!' : '🟠 البرتقالي!';
-        setTimeout(() => r.classList.remove('show'), 1500);
+        r.innerText = !correct ? '⏰ ' + (t === 'green' ? 'الأخضر!' : 'البرتقالي!') : (t === 'green' ? '✅ الأخضر!' : '✅ البرتقالي!');
+        setTimeout(() => r.classList.remove('show'), 1200);
     }
 
     function take(c, t) {
