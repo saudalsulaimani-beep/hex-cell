@@ -15,15 +15,16 @@
         
         body {
             font-family: 'Cairo', sans-serif;
-            background: #e5e7eb;
+            background: linear-gradient(to right, #22c55e 0%, #22c55e 50%, #f97316 50%, #f97316 100%);
             min-height: 100vh;
             padding: 8px;
         }
 
         h1 {
             text-align: center;
-            color: #1e293b;
+            color: white;
             font-size: 1.4rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
             margin-bottom: 5px;
         }
 
@@ -35,23 +36,13 @@
         }
 
         .score {
+            background: rgba(255,255,255,0.35);
             padding: 4px 10px;
             border-radius: 10px;
             font-size: 0.85rem;
             font-weight: 900;
-            border: 2px solid;
-        }
-
-        .score.green {
-            background: #dcfce7;
-            border-color: #22c55e;
-            color: #22c55e;
-        }
-
-        .score.orange {
-            background: #ffedd5;
-            border-color: #f97316;
-            color: #f97316;
+            border: 2px solid white;
+            color: white;
         }
 
         #board {
@@ -59,40 +50,42 @@
             grid-template-columns: repeat(6, 1fr);
             gap: 3px;
             padding: 8px;
-            background: white;
+            background: rgba(255,255,255,0.15);
             border-radius: 10px;
             max-width: 340px;
             margin: 0 auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .hex {
             aspect-ratio: 1;
             display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: 900;
-            border-radius: 6px;
-            transition: all 0.15s;
+            overflow: hidden;
+            position: relative;
         }
 
-        .hex.green-side {
+        .hex-left {
+            width: 50%;
             background: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border: 2px solid #16a34a;
         }
 
-        .hex.orange-side {
+        .hex-right {
+            width: 50%;
             background: #f97316;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border: 2px solid #ea580c;
         }
 
         .hex.captured {
-            border: 3px solid #1e293b !important;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            border: 3px solid white;
         }
 
         /* Modal */
@@ -103,7 +96,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background:0,0, rgba(0,0.9);
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -202,9 +195,10 @@
 
         #info {
             text-align: center;
-            color: #64748b;
+            color: white;
             font-size: 0.75rem;
             margin-top: 5px;
+            opacity: 0.9;
         }
 
         /* iPad */
@@ -221,8 +215,8 @@
     <h1>🐝 لعبة الخلية</h1>
     
     <div id="scoreboard">
-        <div class="score green">🟢 <span id="gs">0</span></div>
-        <div class="score orange">🟠 <span id="os">0</span></div>
+        <div class="score">🟢 <span id="gs">0</span></div>
+        <div class="score">🟠 <span id="os">0</span></div>
     </div>
 
     <div id="board"></div>
@@ -239,7 +233,7 @@
 
     <div id="result"></div>
 
-    <div id="info">⬆️ 3 صفوف فوق أخضر | ⬇️ 3 صفوف تحت برتقالي</div>
+    <div id="info">🟢 يسار | 🟠 يمين</div>
 
     <script>
     const letters = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
@@ -285,19 +279,14 @@
         gameLetters.forEach((l, i) => {
             const hex = document.createElement('div');
             hex.className = 'hex';
-            hex.innerText = l;
             hex.dataset.l = l;
             hex.dataset.t = 'empty';
             
-            const row = Math.floor(i / 6);
-            
-            if (row < 3) {
-                hex.classList.add('green-side');
-                hex.dataset.side = 'green';
-            } else {
-                hex.classList.add('orange-side');
-                hex.dataset.side = 'orange';
-            }
+            // Left = green, Right = orange for ALL cells
+            hex.innerHTML = `
+                <div class="hex-left">${l}</div>
+                <div class="hex-right">${l}</div>
+            `;
             
             hex.onclick = () => showQ(hex);
             b.appendChild(hex);
@@ -307,7 +296,6 @@
     }
 
     function showQ(c) {
-        if (c.dataset.side === turn) return;
         if (c.dataset.captured === 'true') return;
         
         curCell = c;
