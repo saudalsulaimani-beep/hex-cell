@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لعبة الخلية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(to right, #22c55e 50%, #f97316 50%);
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        #scoreboard {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            background: rgba(255,255,255,0.35);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border: 3px solid white;
+            color: white;
+        }
+
+        #board {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+
+        .hex {
+            width: 55px;
+            height: 63px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hex svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hex svg polygon {
+            fill: white;
+            stroke: #cbd5e1;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+        }
+
+        .hex span {
+            position: relative;
+            z-index: 2;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #334155;
+        }
+
+        .hex:hover { transform: scale(1.08); }
+        .hex:active { transform: scale(0.95); }
+
+        .hex.taken-green svg polygon { fill: #22c55e; stroke: #16a34a; }
+        .hex.taken-green span { color: white; }
+
+        .hex.taken-orange svg polygon { fill: #f97316; stroke: #ea580c; }
+        .hex.taken-orange span { color: white; }
+
+        /* Modal */
+        #qmodal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 10px;
+        }
+
+        #qmodal.show { display: flex; }
+
+        #qbox {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #qletter {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #22c55e;
+            margin-bottom: 5px;
+        }
+
+        #qcat {
+            background: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 10px;
+            color: #64748b;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        #timerfill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #fbbf24, #ef4444);
+            width: 100%;
+        }
+
+        #qtext {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin: 15px 0;
+            font-weight: 700;
+        }
+
+        #qopts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        #qopts button {
+            padding: 12px 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-family: Cairo;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #qopts button:hover { background: #f0fdf4; border-color: #22c55e; }
+        #qopts button:active { transform: scale(0.95); }
+        #qopts button.correct { background: #22c55e; color: white; border-color: #22c55e; }
+        #qopts button.wrong { background: #ef4444; color: white; border-color: #ef4444; }
+
+        #result {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 25px 50px;
+            border-radius: 20px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            z;
+            animation:-index: 200 pop 0.3s ease;
+        }
+
+        @keyframes pop {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        #result.show { display: block; }
+        #result.green { background: #22c55e; color: white; box-shadow: 0 0 40px #22c55e; }
+        #result.orange { background: #f97316; color: white; box-shadow: 0 0 40px #f97316; }
+
+        #info {
+            text-align: center;
+            color: white;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* iPad & Tablet */
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            h1 { font-size: 2.2rem; }
+            .score { padding: 10px 30px; font-size: 1.3rem; }
+            .hex { width: 70px; height: 80px; }
+            .hex span { font-size: 1.9rem; }
+            #board { gap: 10px; padding: 25px; }
+            #qletter { font-size: 5rem; }
+            #qtext { font-size: 1.4rem; }
+            #qopts button { padding: 15px; font-size: 1.1rem; }
+        }
+
+        /* Large screens */
+        @media (min-width: 1024px) {
+            .hex { width: 80px; height: 92px; }
+            .hex span { font-size: 2.2rem; }
+            #board { max-width: 750px; gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🐝 لعبة الخلية</h1>
+    
+    <div id="scoreboard">
+        <div class="score">🟢 <span id="gs">0</span></div>
+        <div class="score">🟠 <span id="os">0</span></div>
+    </div>
+
+    <div id="board"></div>
+
+    <div id="qmodal">
+        <div id="qbox">
+            <div id="qletter">أ</div>
+            <div id="qcat">طب</div>
+            <div id="timer"><div id="timerfill"></div></div>
+            <div id="qtext">السؤال...</div>
+            <div id="qopts"></div>
+        </div>
+    </div>
+
+    <div id="result"></div>
+
+    <div id="info">اضغط على أي حرف !يبدأ الفريقين يتنافسون</div>
+
+    <script>
+    const letters = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
+    
+    const qz = {
+        'أ':[{c:'طب',q:'أكبر عضو في الجسم؟',o:['الجلد','الكبد','الرئة','القلب'],a:0},{c:'عام',q:'عاصمة السعودية؟',o:['الرياض','جدة','مكة','الدمام'],a:0},{c:'تاريخ',q:'تأسيس المملكة؟',o:['1932','1930','1925'],a:0}],
+        'ب':[{c:'طب',q:'مرض السكري يصيب؟',o:['البنكرياس','القلب','الكلى','الكبد'],a:0},{c:'علم',q:'أخف عنصر؟',o:['هيدروجين','هيليوم','ليثيوم'],a:0},{c:'جغرافيا',q:'بحر قزوين؟',o:['آسيا','أوروبا','أفريقيا'],a:0}],
+        'ت':[{c:'طب',q:'جهاز قياس الضغط؟',o:['مقياس الضغط','ميزان','سماعة'],a:0},{c:'دين',q:'صلوات اليومية؟',o:['5','3','4'],a:0},{c:'تاريخ',q:'مدة الخلافة؟',o:['626','500','300'],a:0}],
+        'ث':[{c:'طب',q:'ثالث أكبر عضو؟',o:['الكبد','القلب','المخ','الرئة'],a:0},{c:'تاريخ',q:'الثورة الصناعية؟',o:['القرن 18','القرن 17','القرن 19'],a:0}],
+        'ج':[{c:'طب',q:'أكبر مفصل؟',o:['الركبة','الكتف','الورك'],a:0},{c:'علم',q:'إلكترون؟',o:['جسيم','ذره','نواة'],a:0},{c:'جغرافيا',q:'جبلoliath؟',o:['لبنان','مصر','السعودية'],a:0}],
+        'ح':[{c:'طب',q:'أكثر سرطان نساء؟',o:['الثدي','الرئة','القولون'],c:'تاريخ',a:0},{q:'عاصمة العباسيين؟',o:['بغداد','دمشق','القاهرة'],a:0}],
+        'خ':[{c:'طب',q:'خلايا الدم البيضاء؟',o:['العدوى','الجلطات','الأنيميا'],a:0},{c:'جغرافيا',q:'خليج العقبة؟',o:['الأردن والسعودية','مصر والسعودية'],a:0}],
+        'د':[{c:'طب',q:'دواء للقلق؟',o:['سيربرالكس','باراسيتامول','أسبرين'],a:0},{c:'دين',q:'أركان الإسلام؟',o:['5','4','3'],a:0}],
+        'ذ':[{c:'طب',q:'الذاكرة في؟',o:['المخ','القلب','الكبد'],a:0},{c:'تاريخ',q:'ذروة الصناعة؟',o:['القرن 18','القرن 19'],a:0}],
+        'ر':[{c:'طب',q:'الرئة فص؟',o:['5','3','4'],a:0},{c:'جغرافيا',q:'رافد للنيل؟',o:['النيل الأبيض','الكونغو'],a:0}],
+        'ز':[{c:'علم',q:'خواتم زحل؟',o:['جليد','صخور','غاز'],a:0},{c:'طب',q:'زيتون يحتوي؟',o:['كالسيوم','حديد','زنك'],a:0}],
+        'س':[{c:'طب',q:'أسنان البالغ؟',o:['32','30','28'],a:0},{c:'تاريخ',q:'السعودية الثانية؟',o:['عبد العزيز','فيصل','خالد'],a:0}],
+        'ش':[{c:'طب',q:'شرايين القلب؟',o:['تاجية','سباتية','كلوية'],a:0},{c:'جغرافيا',q:'شبه الجزيرة؟',o:['3 بحار','2 بحار'],a:0}],
+        'ص':[{c:'طب',q:'صمامات القلب؟',o:['4','3','2'],a:0},{c:'دين',q:'صيام رمضان؟',o:['29-30','28','31'],a:0}],
+        'ض':[{c:'طب',q:'ضغط طبيعي؟',o:['120/80','140/90','100/70'],a:0},{c:'جغرافيا',q:'البحر الميت؟',o:['-430م','-500م'],a:0}],
+        'ط':[{c:'علم',q:'ألوان الطيف؟',o:['7','6','8'],a:0}],
+        'ظ':[{c:'طب',q:'الكلف؟',o:['جلد','كبد','قلب'],a:0}],
+        'ع':[{c:'طب',q:'أطول عظم؟',o:['الفخذ','الظنبوب','العضد'],a:0}],
+        'غ':[{c:'طب',q:'الغدة الدرقية؟',o:['الرقبة','البطن','الرأس'],a:0},{c:'جغرافيا',q:'غابات الأمازون؟',o:['البرازيل','كولومبيا','بيرو'],a:0}],
+        'ف':[{c:'طب',q:'متبرع عام؟',o:['O','A','B'],a:0}],
+        'ق':[{c:'طب',q:'قوقعة الأذن؟',o:['الأذن','العين','الأنف'],a:0}],
+        'ك':[{c:'طب',q:'الكتف؟',o:['3 عظام','عظمين','4 عظام'],a:0}],
+        'ل':[{c:'طب',q:'دموي؟',o:['داكن','فاتح'],a:0}],
+        'م':[{c:'طب',q:'معدة حامض؟',o:['HCl','HCO3'],a:0}],
+        'ن':[{c:'طب',q:'نخاع العظم؟',o:['كريات الدم','العظام'],a:0}],
+        'ه':[{c:'طب',q:'الهواء يدخل؟',o:['البلعوم','الرغامى','الحنجرة'],a:0},{c:'تاريخ',q:'هولندا عاصمة؟',o:['لاهاي','أمستردام'],a:0}],
+        'و':[{c:'طب',q:'وزن الدماغ؟',o:['1.4 كجم','2 كجم'],a:0}],
+        'ي':[{c:'طب',q:'الهضم يبدأ؟',o:['الفم','المعدة','الأمعاء'],a:0}]
+    };
+
+    let gs = 0, os = 0, curQ = null, curCell = null, tm = null, tl = 15;
+
+    function hexSVG() {
+        return `<svg viewBox="0 0 50 58"><polygon points="25,0 47,14 47,43 25,58 3,43 3,14"/></svg>`;
+    }
+
+    function init() {
+        const b = document.getElementById('board');
+        b.innerHTML = '';
+        letters.forEach(l => {
+            const hex = document.createElement('div');
+            hex.className = 'hex';
+            hex.innerHTML = hexSVG() + '<span>' + l + '</span>';
+            hex.dataset.l = l;
+            hex.dataset.t = 'n';
+            hex.onclick = () => showQ(hex);
+            b.appendChild(hex);
+        });
+    }
+
+    function showQ(c) {
+        if (c.dataset.t !== 'n') return;
+        
+        curCell = c;
+        const cur = c.dataset.l;
+        const arr = qz[cur] || [];
+        if (!arr.length) { alert('ما فيه أسئلة!'); return; }
+        
+        curQ = arr[Math.floor(Math.random() * arr.length)];
+        
+        document.getElementById('qletter').innerText = cur;
+        document.getElementById('qcat').innerText = curQ.c;
+        document.getElementById('qtext').innerText = curQ.q;
+        
+        const opts = document.getElementById('qopts');
+        opts.innerHTML = '';
+        
+        const optsWithIdx = curQ.o.map((o, i) => ({o, i}));
+        optsWithIdx.sort(() => Math.random() - 0.5);
+        
+        optsWithIdx.forEach(item => {
+            const btn = document.createElement('button');
+            btn.innerText = item.o;
+            btn.onclick = () => ans(item.i);
+            opts.appendChild(btn);
+        });
+        
+        document.getElementById('qmodal').classList.add('show');
+        
+        tl = 15;
+        document.getElementById('timerfill').style.width = '100%';
+        clearInterval(tm);
+        tm = setInterval(() => {
+            tl--;
+            document.getElementById('timerfill').style.width = (tl/15*100) + '%';
+            if (tl <= 0) { clearInterval(tm); timeout(); }
+        }, 1000);
+    }
+
+    function ans(i) {
+        clearInterval(tm);
+        
+        const btns = document.querySelectorAll('#qopts button');
+        let correctBtn = null;
+        btns.forEach((btn, idx) => {
+            if (curQ.o[curQ.a] === btn.innerText) correctBtn = btn;
+        });
+        
+        if (correctBtn) correctBtn.classList.add('correct');
+        
+        const winner = Math.random() < 0.5 ? 'green' : 'orange';
+        
+        if (i === curQ.a) {
+            setTimeout(() => {
+                document.getElementById('qmodal').classList.remove('show');
+                take(curCell, winner);
+                showRes(winner, true);
+            }, 800);
+        } else {
+            btns[i].classList.add('wrong');
+            const other = winner === 'green' ? 'orange' : 'green';
+            setTimeout(() => {
+                document.getElementById('qmodal').classList.remove('show');
+                take(curCell, other);
+                showRes(other, true);
+            }, 800);
+        }
+    }
+
+    function timeout() {
+        const winner = Math.random() < 0.5 ? 'green' : 'orange';
+        document.getElementById('qmodal').classList.remove('show');
+        take(curCell, winner);
+        showRes(winner, false);
+    }
+
+    function showRes(t, correct) {
+        const r = document.getElementById('result');
+        r.className = 'show ' + t;
+        r.innerText = !correct ? '⏰ انتهى الوقت!' : (t === 'green' ? '🟢 الأخضر!' : '🟠 البرتقالي!');
+        setTimeout(() => r.classList.remove('show'), 1500);
+    }
+
+    function take(c, t) {
+        c.dataset.t = t;
+        c.classList.add(t === 'green' ? 'taken-green' : 'taken-orange');
+        if (t === 'green') { gs++; document.getElementById('gs').innerText = gs; }
+        else { os++; document.getElementById('os').innerText = os; }
+    }
+
+    function reset() {
+        gs = os = 0;
+        document.getElementById('gs').innerText = '0';
+        document.getElementById('os').innerText = '0';
+        clearInterval(tm);
+        document.getElementById('qmodal').classList.remove('show');
+        init();
+    }
+
+    init();
+    </script>
+</body>
+</html>
