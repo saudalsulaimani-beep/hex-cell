@@ -15,16 +15,15 @@
         
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #22c55e 0%, #22c55e 45%, #f97316 55%, #f97316 100%);
+            background: #e5e7eb;
             min-height: 100vh;
             padding: 8px;
         }
 
         h1 {
             text-align: center;
-            color: white;
+            color: #1e293b;
             font-size: 1.4rem;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
             margin-bottom: 5px;
         }
 
@@ -36,13 +35,23 @@
         }
 
         .score {
-            background: rgba(255,255,255,0.35);
             padding: 4px 10px;
             border-radius: 10px;
             font-size: 0.85rem;
             font-weight: 900;
-            border: 2px solid white;
-            color: white;
+            border: 2px solid;
+        }
+
+        .score.green {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .score.orange {
+            background: #ffedd5;
+            border-color: #f97316;
+            color: #f97316;
         }
 
         #board {
@@ -50,10 +59,11 @@
             grid-template-columns: repeat(6, 1fr);
             gap: 3px;
             padding: 8px;
-            background: rgba(255,255,255,0.15);
+            background: white;
             border-radius: 10px;
             max-width: 340px;
             margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .hex {
@@ -81,8 +91,8 @@
         }
 
         .hex.captured {
-            border: 3px solid white !important;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            border: 3px solid #1e293b !important;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
         }
 
         /* Modal */
@@ -93,7 +103,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.85);
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -192,10 +202,9 @@
 
         #info {
             text-align: center;
-            color: white;
+            color: #64748b;
             font-size: 0.75rem;
             margin-top: 5px;
-            opacity: 0.9;
         }
 
         /* iPad */
@@ -212,8 +221,8 @@
     <h1>🐝 لعبة الخلية</h1>
     
     <div id="scoreboard">
-        <div class="score">🟢 <span id="gs">0</span></div>
-        <div class="score">🟠 <span id="os">0</span></div>
+        <div class="score green">🟢 <span id="gs">0</span></div>
+        <div class="score orange">🟠 <span id="os">0</span></div>
     </div>
 
     <div id="board"></div>
@@ -230,7 +239,7 @@
 
     <div id="result"></div>
 
-    <div id="info">🟢 اليسار أخضر | 🟠 اليمين برتقالي</div>
+    <div id="info">⬆️ 3 صفوف فوق أخضر | ⬇️ 3 صفوف تحت برتقالي</div>
 
     <script>
     const letters = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
@@ -280,8 +289,9 @@
             hex.dataset.l = l;
             hex.dataset.t = 'empty';
             
-            // Left 3 columns = green, Right 3 columns = orange
-            if (i % 6 < 3) {
+            const row = Math.floor(i / 6);
+            
+            if (row < 3) {
                 hex.classList.add('green-side');
                 hex.dataset.side = 'green';
             } else {
@@ -297,7 +307,6 @@
     }
 
     function showQ(c) {
-        // Only opponent can capture
         if (c.dataset.side === turn) return;
         if (c.dataset.captured === 'true') return;
         
@@ -348,7 +357,6 @@
         });
         
         if (idx === curQ.a) {
-            // Correct - current team captures
             setTimeout(() => {
                 document.getElementById('qmodal').classList.remove('show');
                 capture(curCell, turn);
@@ -359,7 +367,6 @@
             btns.forEach((btn, i) => {
                 if (curQ.o[i] === curQ.o[idx]) btn.classList.add('wrong');
             });
-            // Wrong - other team captures
             const other = turn === 'green' ? 'orange' : 'green';
             setTimeout(() => {
                 document.getElementById('qmodal').classList.remove('show');
