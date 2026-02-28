@@ -66,26 +66,23 @@
             font-weight: 900;
             border-radius: 6px;
             transition: all 0.15s;
-            color: #1e293b;
         }
 
-        .hex.empty {
-            background: white;
-            border: 2px solid #e2e8f0;
-        }
-
-        .hex.empty:hover { background: #f1f5f9; }
-
-        .hex.green {
+        .hex.green-side {
             background: #22c55e;
             color: white;
-            border-color: #16a34a;
+            border: 2px solid #16a34a;
         }
 
-        .hex.orange {
+        .hex.orange-side {
             background: #f97316;
             color: white;
-            border-color: #ea580c;
+            border: 2px solid #ea580c;
+        }
+
+        .hex.captured {
+            border: 3px solid white !important;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
         /* Modal */
@@ -233,7 +230,7 @@
 
     <div id="result"></div>
 
-    <div id="info">🟢 الأخضر ← | → 🟠 البرتقالي</div>
+    <div id="info">🟢 اليسار أخضر | 🟠 اليمين برتقالي</div>
 
     <script>
     const letters = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
@@ -269,38 +266,40 @@
     };
 
     let gs = 0, os = 0, curQ = null, curCell = null, tm = null, tl = 15;
-    let turn = 'green'; // Starts with green
+    let turn = 'green';
 
     function init() {
         const b = document.getElementById('board');
         b.innerHTML = '';
-        // Only first 18 letters (6x3 grid)
         const gameLetters = letters.slice(0, 18);
         
         gameLetters.forEach((l, i) => {
             const hex = document.createElement('div');
-            hex.className = 'hex empty';
+            hex.className = 'hex';
             hex.innerText = l;
             hex.dataset.l = l;
             hex.dataset.t = 'empty';
             
-            // Left side = green, right side = orange
+            // Left 3 columns = green, Right 3 columns = orange
             if (i % 6 < 3) {
-                hex.dataset.start = 'green';
+                hex.classList.add('green-side');
+                hex.dataset.side = 'green';
             } else {
-                hex.dataset.start = 'orange';
+                hex.classList.add('orange-side');
+                hex.dataset.side = 'orange';
             }
             
             hex.onclick = () => showQ(hex);
             b.appendChild(hex);
         });
         
-        // Update turn display
         turn = 'green';
     }
 
     function showQ(c) {
-        if (c.dataset.t !== 'empty') return;
+        // Only opponent can capture
+        if (c.dataset.side === turn) return;
+        if (c.dataset.captured === 'true') return;
         
         curCell = c;
         const cur = c.dataset.l;
@@ -349,23 +348,22 @@
         });
         
         if (idx === curQ.a) {
-            // Correct - give to current turn's team
+            // Correct - current team captures
             setTimeout(() => {
                 document.getElementById('qmodal').classList.remove('show');
-                take(curCell, turn);
+                capture(curCell, turn);
                 showRes(turn, true);
-                // Switch turn
                 turn = turn === 'green' ? 'orange' : 'green';
             }, 600);
         } else {
             btns.forEach((btn, i) => {
                 if (curQ.o[i] === curQ.o[idx]) btn.classList.add('wrong');
             });
-            // Wrong - other team gets it
+            // Wrong - other team captures
             const other = turn === 'green' ? 'orange' : 'green';
             setTimeout(() => {
                 document.getElementById('qmodal').classList.remove('show');
-                take(curCell, other);
+                capture(curCell, other);
                 showRes(other, false);
                 turn = other;
             }, 600);
@@ -375,7 +373,7 @@
     function timeout() {
         const other = turn === 'green' ? 'orange' : 'green';
         document.getElementById('qmodal').classList.remove('show');
-        take(curCell, other);
+        capture(curCell, other);
         showRes(other, false);
         turn = other;
     }
@@ -387,11 +385,10 @@
         setTimeout(() => r.classList.remove('show'), 1000);
     }
 
-    function take(c, t) {
-        c.dataset.t = t;
-        c.classList.remove('empty');
-        c.classList.add(t);
-        if (t === 'green') { gs++; document.getElementById('gs').innerText = gs; }
+    function capture(c, team) {
+        c.dataset.captured = 'true';
+        c.classList.add('captured');
+        if (team === 'green') { gs++; document.getElementById('gs').innerText = gs; }
         else { os++; document.getElementById('os').innerText = os; }
     }
 
