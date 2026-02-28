@@ -15,86 +15,78 @@
         
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(to right, #22c55e 50%, #f97316 50%);
+            background: linear-gradient(135deg, #22c55e 0%, #22c55e 45%, #f97316 55%, #f97316 100%);
             min-height: 100vh;
-            padding: 10px;
+            padding: 8px;
         }
 
         h1 {
             text-align: center;
             color: white;
-            font-size: 1.6rem;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            font-size: 1.4rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
             margin-bottom: 5px;
         }
 
         #scoreboard {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 5px;
         }
 
         .score {
-            background: rgba(255,255,255,0.4);
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            background: rgba(255,255,255,0.35);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
             font-weight: 900;
             border: 2px solid white;
             color: white;
         }
 
         #board {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 4px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
             padding: 8px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
             border-radius: 10px;
-            max-width: 360px;
+            max-width: 340px;
             margin: 0 auto;
         }
 
         .hex {
-            width: 45px;
-            height: 52px;
-            position: relative;
+            aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-        }
-
-        .hex svg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .hex svg polygon {
-            fill: white;
-            stroke: #94a3b8;
-            stroke-width: 2;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
-        }
-
-        .hex span {
-            position: relative;
-            z-index: 2;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
+            border-radius: 6px;
+            transition: all 0.15s;
             color: #1e293b;
         }
 
-        .hex:active { transform: scale(0.95); }
+        .hex.empty {
+            background: white;
+            border: 2px solid #e2e8f0;
+        }
 
-        .hex.taken-green svg polygon { fill: #22c55e; stroke: #16a34a; }
-        .hex.taken-green span { color: white; }
+        .hex.empty:hover { background: #f1f5f9; }
 
-        .hex.taken-orange svg polygon { fill: #f97316; stroke: #ea580c; }
-        .hex.taken-orange span { color: white; }
+        .hex.green {
+            background: #22c55e;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        .hex.orange {
+            background: #f97316;
+            color: white;
+            border-color: #ea580c;
+        }
 
         /* Modal */
         #qmodal {
@@ -108,22 +100,22 @@
             justify-content: center;
             align-items: center;
             z-index: 100;
-            padding: 10px;
+            padding: 8px;
         }
 
         #qmodal.show { display: flex; }
 
         #qbox {
             background: white;
-            padding: 18px;
-            border-radius: 15px;
-            max-width: 350px;
+            padding: 15px;
+            border-radius: 12px;
+            max-width: 320px;
             width: 100%;
             text-align: center;
         }
 
         #qletter {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 900;
             color: #22c55e;
         }
@@ -137,7 +129,7 @@
         }
 
         #timer {
-            height: 4px;
+            height: 3px;
             background: #e2e8f0;
             border-radius: 2px;
             margin: 8px 0;
@@ -151,22 +143,22 @@
         }
 
         #qtext {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #1e293b;
-            margin: 10px 0;
+            margin: 8px 0;
             font-weight: 700;
         }
 
         #qopts {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 5px;
-            margin-top: 10px;
+            gap: 4px;
+            margin-top: 8px;
         }
 
         #qopts button {
             padding: 8px 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             border: 2px solid #e2e8f0;
             border-radius: 6px;
@@ -184,12 +176,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 18px 35px;
-            border-radius: 12px;
-            font-size: 1.3rem;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2rem;
             font-weight: 900;
             z-index: 200;
-            animation: pop 0.3s ease;
+            animation: pop 0.25s ease;
         }
 
         @keyframes pop {
@@ -204,19 +196,18 @@
         #info {
             text-align: center;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-top: 5px;
             opacity: 0.9;
         }
 
         /* iPad */
         @media (min-width: 768px) {
-            .hex { width: 60px; height: 70px; }
-            .hex span { font-size: 1.6rem; }
-            #board { gap: 6px; max-width: 480px; }
-            #qletter { font-size: 4.5rem; }
-            #qtext { font-size: 1.2rem; }
-            #qopts button { padding: 12px; font-size: 0.95rem; }
+            #board { max-width: 450px; gap: 5px; }
+            .hex { font-size: 1.4rem; }
+            #qletter { font-size: 4rem; }
+            #qtext { font-size: 1.1rem; }
+            #qopts button { padding: 12px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -242,13 +233,13 @@
 
     <div id="result"></div>
 
-    <div id="info">اضغط على حرف ثم أجيب صح تأخذه!</div>
+    <div id="info">🟢 الأخضر ← | → 🟠 البرتقالي</div>
 
     <script>
     const letters = 'أبتثجحخدذرزسشصضطظعغفقكلمنهوي'.split('');
     
     const qz = {
-        'أ':[{c:'طب',q:'أكبر عضو؟',o:['الجلد','الكبد','الرئة','القلب'],a:0},{c:'عام',q:'عاصمة السعودية؟',o:['الرياضمكة','الدمام'],a','جدة',':0}],
+        'أ':[{c:'طب',q:'أكبر عضو؟',o:['الجلد','الكبد','الرئة','القلب'],a:0},{c:'عام',q:'عاصمة السعودية؟',o:['الرياض','جدة','مكة','الدمام'],a:0}],
         'ب':[{c:'طب',q:'السكري يصيب؟',o:['البنكرياس','القلب','الكلى','الكبد'],a:0},{c:'علم',q:'أخف عنصر؟',o:['هيدروجين','هيليوم','ليثيوم'],a:0}],
         'ت':[{c:'طب',q:'قياس الضغط؟',o:['مقياس الضغط','ميزان','سماعة'],a:0},{c:'دين',q:'الصلوات؟',o:['5','3','4'],a:0}],
         'ث':[{c:'طب',q:'ثالث أكبر عضو؟',o:['الكبد','القلب','المخ','الرئة'],a:0}],
@@ -278,27 +269,38 @@
     };
 
     let gs = 0, os = 0, curQ = null, curCell = null, tm = null, tl = 15;
-
-    function hexSVG() {
-        return `<svg viewBox="0 0 50 58"><polygon points="25,0 47,14 47,43 25,58 3,43 3,14"/></svg>`;
-    }
+    let turn = 'green'; // Starts with green
 
     function init() {
         const b = document.getElementById('board');
         b.innerHTML = '';
-        letters.forEach(l => {
+        // Only first 18 letters (6x3 grid)
+        const gameLetters = letters.slice(0, 18);
+        
+        gameLetters.forEach((l, i) => {
             const hex = document.createElement('div');
-            hex.className = 'hex';
-            hex.innerHTML = hexSVG() + '<span>' + l + '</span>';
+            hex.className = 'hex empty';
+            hex.innerText = l;
             hex.dataset.l = l;
-            hex.dataset.t = 'n';
+            hex.dataset.t = 'empty';
+            
+            // Left side = green, right side = orange
+            if (i % 6 < 3) {
+                hex.dataset.start = 'green';
+            } else {
+                hex.dataset.start = 'orange';
+            }
+            
             hex.onclick = () => showQ(hex);
             b.appendChild(hex);
         });
+        
+        // Update turn display
+        turn = 'green';
     }
 
     function showQ(c) {
-        if (c.dataset.t !== 'n') return;
+        if (c.dataset.t !== 'empty') return;
         
         curCell = c;
         const cur = c.dataset.l;
@@ -314,14 +316,12 @@
         const opts = document.getElementById('qopts');
         opts.innerHTML = '';
         
-        // Shuffle options
         const optLabels = [...curQ.o];
         optLabels.sort(() => Math.random() - 0.5);
         
         optLabels.forEach(label => {
             const btn = document.createElement('button');
             btn.innerText = label;
-            // Find original index
             const origIdx = curQ.o.indexOf(label);
             btn.onclick = () => checkAnswer(origIdx);
             opts.appendChild(btn);
@@ -343,55 +343,54 @@
         clearInterval(tm);
         
         const btns = document.querySelectorAll('#qopts button');
-        
-        // Find and mark correct
         let correctLabel = curQ.o[curQ.a];
         btns.forEach(btn => {
             if (btn.innerText === correctLabel) btn.classList.add('correct');
-            if (btn.innerText !== correctLabel && btn.classList.contains('wrong')) btn.classList.remove('wrong');
         });
         
         if (idx === curQ.a) {
-            // Correct! Give to random team (in real game, they'd buzz in)
-            const winner = Math.random() < 0.5 ? 'green' : 'orange';
+            // Correct - give to current turn's team
             setTimeout(() => {
                 document.getElementById('qmodal').classList.remove('show');
-                take(curCell, winner);
-                showRes(winner, true);
+                take(curCell, turn);
+                showRes(turn, true);
+                // Switch turn
+                turn = turn === 'green' ? 'orange' : 'green';
             }, 600);
         } else {
-            // Wrong - mark it
             btns.forEach((btn, i) => {
                 if (curQ.o[i] === curQ.o[idx]) btn.classList.add('wrong');
             });
-            // Give to other team
-            const loser = idx === curQ.a ? 'green' : 'orange';
+            // Wrong - other team gets it
+            const other = turn === 'green' ? 'orange' : 'green';
             setTimeout(() => {
                 document.getElementById('qmodal').classList.remove('show');
-                take(curCell, loser);
-                showRes(loser, false);
+                take(curCell, other);
+                showRes(other, false);
+                turn = other;
             }, 600);
         }
     }
 
     function timeout() {
-        // Time out - give to random team
-        const winner = Math.random() < 0.5 ? 'green' : 'orange';
+        const other = turn === 'green' ? 'orange' : 'green';
         document.getElementById('qmodal').classList.remove('show');
-        take(curCell, winner);
-        showRes(winner, false);
+        take(curCell, other);
+        showRes(other, false);
+        turn = other;
     }
 
     function showRes(t, correct) {
         const r = document.getElementById('result');
         r.className = 'show ' + t;
-        r.innerText = !correct ? '⏰ ' + (t === 'green' ? 'الأخضر!' : 'البرتقالي!') : (t === 'green' ? '✅ الأخضر!' : '✅ البرتقالي!');
-        setTimeout(() => r.classList.remove('show'), 1200);
+        r.innerText = correct ? (t === 'green' ? '🟢' : '🟠') : '⏰';
+        setTimeout(() => r.classList.remove('show'), 1000);
     }
 
     function take(c, t) {
         c.dataset.t = t;
-        c.classList.add(t === 'green' ? 'taken-green' : 'taken-orange');
+        c.classList.remove('empty');
+        c.classList.add(t);
         if (t === 'green') { gs++; document.getElementById('gs').innerText = gs; }
         else { os++; document.getElementById('os').innerText = os; }
     }
